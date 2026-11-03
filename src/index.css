@@ -1,0 +1,96 @@
+@import 'tailwindcss';
+
+/*
+  Charte BM Automobile, posée sur la structure du template Boxcars
+  (Tailwind v4 : chaque --color-x devient bg-x / text-x / border-x)
+*/
+@theme {
+  --font-sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-figtree: 'Figtree', 'DM Sans', ui-sans-serif, sans-serif;
+  --font-brand: 'Oswald', 'DM Sans', ui-sans-serif, sans-serif; /* logo et grand logotype */
+
+  --color-navy: #14161b; /* titres, sections sombres, pied de page */
+  --color-ink: #23252b; /* texte courant */
+  --color-accent: #d71920; /* boutons principaux, accents (rouge BM) */
+  --color-accent-dark: #b5141a; /* survol des boutons rouges */
+  --color-lavender: #f5f3f2; /* panneaux teintés, cartes d'avis */
+  --color-snow: #fafafa; /* bande marques, cartes équipe et FAQ */
+  --color-ice: #fdeaea; /* pastilles d'icônes, étiquette d'article */
+  --color-muted: #a7a9b0; /* textes du pied de page */
+  --color-line: #e3e3e3; /* bordures */
+  --color-mist: #f4f4f5; /* tuiles du simulateur */
+  --color-slate: #6b7280; /* libellés du simulateur */
+
+  /* Framer breakpoints: phone < 810, tablet 810-1199, desktop >= 1200
+     (in rem like Tailwind's own, otherwise the media queries are emitted out of order) */
+  --breakpoint-md: 50.625rem;
+  --breakpoint-lg: 75rem;
+
+  --ease-framer: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-white font-sans text-ink antialiased;
+    overflow-x: clip; /* hides the x-offset of reveal animations without breaking sticky */
+  }
+  ::selection {
+    background: var(--color-accent);
+    color: #fff;
+  }
+}
+
+@layer components {
+  /* 1356px wide with 30px gutters = the 1296px content column of the template */
+  .container-x {
+    @apply mx-auto w-full max-w-[1356px] px-[30px];
+  }
+
+  /* Section title (H3 on the template): 40/52 bold, 28/36.4 on phones */
+  .title-lg {
+    @apply text-[28px] leading-[1.3] font-bold text-navy md:text-[40px];
+  }
+
+  /* Underline that grows on hover (nav, footer and text links) */
+  .hover-line {
+    @apply relative;
+  }
+  .hover-line::after {
+    content: '';
+    @apply absolute bottom-0 left-0 h-px w-full origin-left scale-x-0 bg-current transition-transform duration-300 ease-framer;
+  }
+  .hover-line:hover::after,
+  .hover-line[aria-current='page']::after {
+    @apply scale-x-100;
+  }
+
+  /* Article body coming from the CMS */
+  .article h5 {
+    @apply mt-6 mb-6 text-xl leading-[1.3] font-medium text-navy first:mt-0;
+  }
+  .article p {
+    @apply text-[15px] leading-6;
+  }
+  .article ul {
+    @apply list-disc pl-5;
+  }
+  .article li::marker {
+    @apply text-ink;
+  }
+}
+
+@layer components {
+  /* Payment calculator sliders: remplissage et curseur rouges */
+  .range {
+    @apply h-1 w-full cursor-pointer appearance-none rounded-full outline-none;
+  }
+  .range::-webkit-slider-thumb {
+    @apply size-4 appearance-none rounded-full border-2 border-white bg-accent shadow;
+  }
+  .range::-moz-range-thumb {
+    @apply size-4 rounded-full border-2 border-white bg-accent shadow;
+  }
+}
